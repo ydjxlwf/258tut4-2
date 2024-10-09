@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profiles</title>
+</head>
+<body>
+<h1>User Profiles</h1>
+<div id="profiles"></div>
+
+<script>
+fetch('profiles.json')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Fetch error: ' + response.status);
+    } else {
+      return response.json();
+    }
+  })
+  .then(json => {
+    const profilesContainer = document.getElementById('profiles');
+    json.profiles.forEach(profile => {
+      const profileDiv = document.createElement('div');
+      profileDiv.innerHTML = `
+        <h2>${profile.firstName}${profile.lastName}</h2>
+        <p>Email: ${profile.email}</p>
+        <p>Date of Birth: ${profile.dateOfBirth}</p>
+        <p>Address: ${profile.address.street},${profile.address.city}, ${profile.address.state},${profile.address.zipCode}</p>
+        <p>Preferences: Theme - ${profile.preferences.theme}, Language -${profile.preferences.language}, Notifications - ${profile.preferences.notifications ? 'On' : 'Off'}, Subscription -${profile.preferences.subscription ? 'Yes' : 'No'}</p>
+      `;
+      profilesContainer.appendChild(profileDiv);
+    });
+  })
+  .catch(err => console.error('Fetch error: ' + err.message));
+</script>
+</body>
+</html>
